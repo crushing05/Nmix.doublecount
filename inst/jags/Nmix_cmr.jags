@@ -1,0 +1,52 @@
+
+    model {
+    ##################
+    ### Priors
+    ##################
+
+      lambda ~ dunif(0, 100)         # Abundance rate
+      theta ~ dunif(0, 100)          # Detection rate
+      phi ~ dunif(0, 1)              # Probability(marked)
+
+    ##################
+    ### Likelihoods
+    ##################
+
+    ## Count data
+      for (s in 1:S) {
+        ## Total abundance
+        N[s] ~ dpois(lambda)            # Abundance, site s
+        Nm[s] ~ dbinom(phi, N[s])       # Number of marked individuals, site s
+        Nu[s] <- N[s] - Nm[s]           # Number of unmarked individuals, site s
+
+
+        ## Counts
+        for (k in 1:K) {
+          n[s, k] ~ dpois(theta * Nu[s])         
+        }#k
+      }#s
+    
+
+    ## Capture-recapture data
+      for(i in 1:TotNm){
+        for(k in 1:K){
+          y[i, k] ~ dpois(theta)    
+        }#k
+      }#i
+
+
+    ###########################
+    ### Derived parameters
+    ###########################
+    
+    ## Total abundance
+
+      Ntot <- sum(N[1:S])
+
+    ## 'Detection' probability
+
+      p <- 1 - exp(-theta)
+
+
+    }#model
+    
