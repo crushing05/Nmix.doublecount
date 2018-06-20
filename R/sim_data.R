@@ -1,5 +1,5 @@
-#' sim_data
-#'
+#` sim_data
+#`
 #' Simulate counts and capture-recapture data
 #' 
 #' @param S Number of sites
